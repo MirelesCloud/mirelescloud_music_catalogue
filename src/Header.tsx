@@ -13,6 +13,7 @@ const NavHeader = styled.div`
     display: flex;
     align-items: center;
     margin: 0 auto;
+    font-size: 1.5rem;
 `
 
 const NavLeft = styled.div`

@@ -1,5 +1,5 @@
 import React, { useRef, useContext, useState, useEffect } from 'react'
-import { Overlay, Dialog, fadeIn, Container     } from './Styles'
+import { Overlay, Dialog, Container     } from './Styles'
 import ReactDOM from 'react-dom';
 
 const Context = React.createContext(null);
@@ -23,7 +23,6 @@ export function ModalProvider({children}: any) {
 
 export function Modal({onClose, children, ...props }: any) {
   const modalNode = useContext(Context);
-  console.log(children)
 
   return  modalNode
     ? ReactDOM.createPortal(

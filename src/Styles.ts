@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle, keyframes } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
   body {
@@ -84,7 +84,7 @@ export const InfoDetailsRight = styled.div`
   flex-direction: column;
 `
 
-export const InfoHeader = styled.h5``;
+export const InfoHeader = styled.h6``;
 
 export const InfoText = styled.p`
   padding: 0px;
@@ -125,12 +125,7 @@ export const CustomButton = styled.div`
  margin-left: 20px
 `
 
-export const ModalWindow = styled.div`
-  font-family: sans-serif;
-  text-align: center;
-  position: relative;
-`
-
+/* Modal */
 export const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -150,9 +145,84 @@ export const Dialog = styled.div`
   transform: translate(-50%, -50%);
   z-index: 1;
 `
-export const fadeIn = keyframes`from {opacity: 0;}`;
 
 export const Container = styled.div`
   position: relative;
   z-index: 0;
 `
+
+export const ModalWrapper = styled.div`
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+`
+export const ModalContainer = styled.div`
+  position: relative;
+  flex-basis: 100%;
+  margin: 10px;
+  cursor: pointer;
+  transition: 0.3s all ease-in;
+`
+export const ModalInfo = styled.div`
+  padding: 5px 10px;
+`
+
+export const Column = styled.div`
+  float: left;
+  width: 50%;
+`
+
+export const Row = styled.div`
+  &::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+`
+export const ModalHeader = styled.h4``
+
+export const ModalText = styled.p`
+  padding: 0px;
+  margin: 3px;
+`
+export const Line = styled.hr`
+  color: rgba(0, 0, 0, 0.7);
+  
+`
+
+export const CloseX = styled.div`
+  &::after {
+    display: inline-block;
+    content: "\00d7";
+  }
+`
+
+export const Select = styled.select`
+  font-size: 16px;
+  border: solid 1px #dbdbdb;
+  border-radius: 3px;
+  color: #262626;
+  padding: 7px 33px;
+  border-radius: 3px;
+  color: #999;
+  cursor: text;
+  font-size: 14px;
+  font-weight: 300;
+  text-align: center;
+  background: #fafafa;
+  margin-right: 10px;
+  width: 200px;
+
+  &::after {
+    position: absolute;
+    content: '';
+    top: 14px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 3px solid transparent;
+    border-color: #fff transparent transparent transparent;
+  }
+
+`
+

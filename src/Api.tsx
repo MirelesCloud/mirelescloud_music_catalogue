@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Service, IChart } from './Types'
 
 const GetChart = () => {
@@ -6,12 +6,12 @@ const GetChart = () => {
       status: 'loading'
     })
   
-    useEffect(() => {
+    useMemo(() => {
       fetch('https://cors-anywhere.herokuapp.com/http://api.deezer.com/chart&limit=5')
         .then(response => response.json())
         .then(response => {
           setResults({ status: 'loaded', payload: response})
-          //console.log(response)
+          console.log(response)
         })
         .catch(error => setResults({ status: 'error', error }))
     }, [])

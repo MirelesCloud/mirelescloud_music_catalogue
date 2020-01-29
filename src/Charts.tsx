@@ -1,16 +1,28 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
+    Service,
+    ITrackList,
     ITracks, 
     IAlbum, 
     IArtist, 
     IPlaylist, 
-    IPodcast } from './Types'
+    IPodcast,
+    IData } from './Types'
 
-import { 
+import {
+  Row,
+  Column,
+  ModalWrapper,
+  ModalContainer,
+  ModalInfo,
+  ModalHeader,
+  ModalText,
   InfoImage,
   Image,
   InfoHeader,
-  InfoText  }  from './Styles'
+  InfoText,
+  CloseX,
+  Line  }  from './Styles'
   import { Modal } from './Modal'
  
 
@@ -25,18 +37,38 @@ export const Tracks: React.FC<ITracks> = ({id, title, artist, album }) => {
           <InfoText>{artist.name}</InfoText>
       </InfoImage>
       {isModalOpen && <Modal onClose={() => setIsModalOpen(false)}>
-        <Image src={album.cover} alt={album.title}/>
-        <InfoImage>
-          <InfoHeader>Album: {album.title}</InfoHeader>
-          <InfoText>{artist.name}</InfoText>
-        </InfoImage>
+          <ModalWrapper>
+           
+            <ModalContainer>
+              <Image src={album.cover} alt={album.title}/>
+              <InfoImage>
+                <InfoHeader>Album: {album.title}</InfoHeader>
+                <InfoText>{artist.name}</InfoText>
+              </InfoImage>
+              <CloseX/>
+            </ModalContainer>
+          </ModalWrapper>
         </Modal>}
       </>
   )
 }
 
-export const Albums: React.FC<IAlbum> = ({id, title, artist, cover_big}) => {
+export const Albums: React.FC<IAlbum> = ({id, title, artist, cover_big, tracklist}) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [result, setResult] = useState<Service<ITrackList>>({
+    status: 'loading'
+  })
+
+  /* useMemo(() => {
+    fetch(`https://cors-anywhere.herokuapp.com/${tracklist}` )
+    .then(response => response.json())
+    .then(response => {
+      setResult({ status: 'loaded', payload: response})
+      console.log(response)
+    })
+    .catch(error => setResult({ status: 'error', error}))
+  }, []) */
+
   return (
       <>
       <Image src={cover_big} alt={title} onClick={() => setIsModalOpen(true)}/>
@@ -44,7 +76,27 @@ export const Albums: React.FC<IAlbum> = ({id, title, artist, cover_big}) => {
           <InfoHeader>{title}</InfoHeader>
           <InfoText>{artist.name}</InfoText>
       </InfoImage>
-      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)}><Image src={cover_big} alt={title}/></Modal>}
+      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)}>
+          <ModalWrapper>
+            <ModalContainer>
+            <ModalHeader>{title}</ModalHeader>
+              <Row>
+                <Column>
+                  <Image src={cover_big} alt={title}/>
+                </Column>
+                <Column>
+                  <ModalInfo></ModalInfo>
+                </Column>
+              </Row>
+              <Line/>
+              <Row>
+                <Column>
+                {tracklist}
+                </Column>
+              </Row>
+            </ModalContainer>
+          </ModalWrapper>
+        </Modal>}
       </>
   )
 }
@@ -58,7 +110,28 @@ export const Artists: React.FC<IArtist> = ({id, name, tracklist, picture_big, po
           <InfoHeader>{name}</InfoHeader>
           <InfoText>No: {position}</InfoText>
       </InfoImage>
-      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)}><Image src={picture_big} alt={name}/></Modal>}
+      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)}>
+      <ModalWrapper>
+            <ModalContainer>
+            <ModalHeader>{name}</ModalHeader>
+              <Row>
+                <Column>
+                  <Image src={picture_big} alt={name}/>
+                </Column>
+                <Column>
+                  <ModalInfo></ModalInfo>
+                </Column>
+              </Row>
+              <Line/>
+              <Row>
+                <Column>
+                {tracklist}
+                </Column>
+              </Row>
+            </ModalContainer>
+          </ModalWrapper>
+        
+        </Modal>}
       </>
   )
 }
@@ -72,8 +145,26 @@ export const Playlists: React.FC<IPlaylist> = ({id, title, tracklist, user, pict
           <InfoHeader>{title}</InfoHeader>
           <InfoText>{user.name}</InfoText>
       </InfoImage>
-      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)}><Image src={picture_big} alt={title}/>
-        <ul>{tracklist}</ul>
+      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)}>
+          <ModalWrapper>
+            <ModalContainer>
+            <ModalHeader>{title}</ModalHeader>
+              <Row>
+                <Column>
+                  <Image src={picture_big} alt={title}/>
+                </Column>
+                <Column>
+                  <ModalInfo></ModalInfo>
+                </Column>
+              </Row>
+              <Line/>
+              <Row>
+                <Column>
+                {tracklist}
+                </Column>
+              </Row>
+            </ModalContainer>
+          </ModalWrapper>
       </Modal>}
       </>
   )
@@ -86,10 +177,62 @@ export const Podcasts: React.FC<IPodcast> = ({id, title, fans, picture_big, desc
       <Image src={picture_big} alt={title} onClick={() => setIsModalOpen(true)}/>
       <InfoImage>
           <InfoHeader>{title}</InfoHeader>
-          <InfoText>Fans: {fans}</InfoText>
       </InfoImage>
-      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)}><Image src={picture_big} alt={title}/><p>{description}</p></Modal>}
-
+      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)}>
+      <ModalWrapper>
+            <ModalContainer>
+            <ModalHeader>{title}</ModalHeader>
+              <Row>
+                <Column>
+                  <Image src={picture_big} alt={title}/>
+                </Column>
+                <Column>
+                  <ModalInfo>{description}</ModalInfo>
+                </Column>
+              </Row>
+              <Line/>
+              <Row>
+                <Column>
+                  Fans: {fans}
+                </Column>
+              </Row>
+            </ModalContainer>
+          </ModalWrapper>
+        </Modal>}
       </>
+  )
+}
+
+export const Search: React.FC<IData> = ({id, title, artist, album}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  return (
+    <>
+      <Image src={album.cover_big} alt={title} onClick={() => setIsModalOpen(true)}/>
+      <InfoImage>
+          <InfoHeader>{title}</InfoHeader>
+          <InfoText>{artist.name}</InfoText>
+      </InfoImage>
+      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)}>
+      <ModalWrapper>
+            <ModalContainer>
+            <ModalHeader>{title}</ModalHeader>
+              <Row>
+                <Column>
+                  <Image src={album.cover_big} alt={album.title}/>
+                </Column>
+                <Column>
+                  
+                </Column>
+              </Row>
+              <Line/>
+              <Row>
+                <Column>
+                  <ModalInfo>{artist.name}</ModalInfo>
+                </Column>
+              </Row>
+            </ModalContainer>
+          </ModalWrapper>
+        </Modal>}
+    </>
   )
 }

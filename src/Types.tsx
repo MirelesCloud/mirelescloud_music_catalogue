@@ -40,9 +40,19 @@ export interface IAlbum {
     id: number;
     title: string;
     cover_big: string;
+    tracklist: string;
     artist: {
       name: string;
     }
+  }
+
+  export interface IAlbumTracks {
+    id: number;
+    title: string;
+  }
+
+  export interface ITrackList {
+    data: IAlbumTracks[];
   }
   
   export interface IArtist {

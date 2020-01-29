@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Service, IResults } from './Types'
 import NavBar from './Header'
 import GetChart from './Api'
-import { Tracks, Albums, Artists, Playlists, Podcasts } from './Charts'
+import { Tracks, Albums, Artists, Playlists, Podcasts, Search } from './Charts'
 import { ModalProvider } from './Modal'
 import { 
   GlobalStyle,
@@ -15,13 +15,15 @@ import {
   ImageContainer,
   Image,
   InfoContainer,
+  InfoImage,
   InfoDetails,
   InfoDetailsLeft,
   InfoDetailsRight,
   InfoHeader,
   InfoText, 
   Input,
-  CustomButton }  from './Styles'
+  CustomButton,
+  Select }  from './Styles'
 
 
 const API_KEY = process.env.REACT_APP_DEEZER_API_KEY;
@@ -37,17 +39,13 @@ const App: React.FC = () => {
   const chart = GetChart()
 
   useEffect(() => {
-    fetch(`https://deezerdevs-deezer.p.rapidapi.com/search?q=${search}&limit=10`, {
-      "method": "GET",
-      "headers": {
-        "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com",
-        "x-rapidapi-key": `${API_KEY}`
-      }
-    })
+    fetch(`https://cors-anywhere.herokuapp.com/http://api.deezer.com/search?q=${search}&limit=10`)
     .then(response => response.json())
     .then(response => {
       setResults({ status: 'loaded', payload: response});
       setQuery("")
+      console.log(response)
+      
     })
     .catch(error => setResults({ status: 'error', error}))
   }, [search])
@@ -77,7 +75,7 @@ const App: React.FC = () => {
               {chart.status === 'loaded' && 
                 chart.payload.albums.data.map(idx => (
                   <ImageContainer key={idx.id}>
-                    <Albums id={idx.id} title={idx.title} cover_big={idx.cover_big} artist={idx.artist} />
+                    <Albums id={idx.id} title={idx.title} cover_big={idx.cover_big} artist={idx.artist} tracklist={idx.tracklist}/>
                   </ImageContainer>
                 ))
               }
@@ -119,22 +117,25 @@ const App: React.FC = () => {
             <h3>Discover...</h3>
             <InfoDetails>
               <InfoDetailsLeft>
+                <Select>
+                  
+                    <option>Search</option>
+                    <option>Artist</option>
+                    <option>Track</option>
+               
+                </Select>{" "}
                 <Input placeholder="search for..." type="text" name="search" value={query} onChange={e => setQuery(e.target.value)}/>
                 <CustomButton  onClick={() => setSearch(query)}>Search</CustomButton>
               </InfoDetailsLeft>
               <InfoDetailsRight>
-              
-                <div>Modal is: {isModalOpen ? "open" : "closed"}</div>
-                <button onClick={() => setIsModalOpen(true)}>Open</button>
+               
               </InfoDetailsRight>
             </InfoDetails>
             <ImagesWrapper>
             {results.status === 'loaded' &&
               results.payload.data.map(idx => (
                   <ImageContainer key={idx.id}>
-                    <Image src={idx.album.cover_big} alt={idx.artist.name} onClick={() => setIsModalOpen(true)}/>
-                    <InfoHeader>{idx.title}</InfoHeader>
-                    <InfoText>{idx.artist.name}</InfoText>
+                    <Search id={idx.id} title={idx.title} artist={idx.artist} album={idx.album}/>
                   </ImageContainer>
               ))
             }
