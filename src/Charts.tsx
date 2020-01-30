@@ -4,8 +4,10 @@ import {
     ITrackList,
     ITracks, 
     IAlbum, 
-    IArtist, 
-    IPlaylist, 
+    IArtist,
+    IArtistTopTracks, 
+    IPlaylist,
+    IPlayListData,
     IPodcast,
     IData } from './Types'
 
@@ -16,7 +18,11 @@ import {
   ModalContainer,
   ModalInfo,
   ModalHeader,
+  ModalSubHeader,
   ModalText,
+  ModalList,
+  ModalTable,
+  ModalTableColumn,
   InfoImage,
   Image,
   InfoHeader,
@@ -38,7 +44,6 @@ export const Tracks: React.FC<ITracks> = ({id, title, artist, album }) => {
       </InfoImage>
       {isModalOpen && <Modal onClose={() => setIsModalOpen(false)}>
           <ModalWrapper>
-           
             <ModalContainer>
               <Image src={album.cover} alt={album.title}/>
               <InfoImage>
@@ -59,15 +64,14 @@ export const Albums: React.FC<IAlbum> = ({id, title, artist, cover_big, tracklis
     status: 'loading'
   })
 
-  /* useMemo(() => {
+  useMemo(() => {
     fetch(`https://cors-anywhere.herokuapp.com/${tracklist}` )
     .then(response => response.json())
     .then(response => {
       setResult({ status: 'loaded', payload: response})
-      console.log(response)
     })
     .catch(error => setResult({ status: 'error', error}))
-  }, []) */
+  }, [tracklist]) 
 
   return (
       <>
@@ -85,13 +89,26 @@ export const Albums: React.FC<IAlbum> = ({id, title, artist, cover_big, tracklis
                   <Image src={cover_big} alt={title}/>
                 </Column>
                 <Column>
-                  <ModalInfo></ModalInfo>
+                  <ModalInfo>
+                    <ModalSubHeader>{artist.name}</ModalSubHeader>
+                  </ModalInfo>
                 </Column>
               </Row>
               <Line/>
               <Row>
                 <Column>
-                {tracklist}
+                  <ModalSubHeader>Track List</ModalSubHeader>
+                </Column>
+                <Column>
+                {result.status === 'loaded' &&
+                  result.payload.data.map(idx => (
+                     <ModalTable  key={idx.id}>
+                       <ModalTableColumn>
+                        <td>{idx.title}</td>
+                       </ModalTableColumn>
+                     </ModalTable>
+                  ))
+                  }
                 </Column>
               </Row>
             </ModalContainer>
@@ -103,6 +120,22 @@ export const Albums: React.FC<IAlbum> = ({id, title, artist, cover_big, tracklis
 
 export const Artists: React.FC<IArtist> = ({id, name, tracklist, picture_big, position}) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [result, setResult] = useState<Service<IArtistTopTracks>>({
+    status: 'loading'
+  })
+
+  /* useMemo(() => {
+    fetch(`https://cors-anywhere.herokuapp.com/${tracklist}` )
+    .then(response => response.json())
+    .then(response => {
+      setResult({ status: 'loaded', payload: response})
+    })
+    .catch(error => setResult({ status: 'error', error}))
+  }, [tracklist])
+  
+  console.log(result) */
+
+
   return (
       <>
       <Image src={picture_big} alt={name} onClick={() => setIsModalOpen(true)}/>
@@ -130,7 +163,6 @@ export const Artists: React.FC<IArtist> = ({id, name, tracklist, picture_big, po
               </Row>
             </ModalContainer>
           </ModalWrapper>
-        
         </Modal>}
       </>
   )
@@ -138,6 +170,21 @@ export const Artists: React.FC<IArtist> = ({id, name, tracklist, picture_big, po
 
 export const Playlists: React.FC<IPlaylist> = ({id, title, tracklist, user, picture_big}) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [result, setResult] = useState<Service<IPlayListData>>({
+    status: 'loading'
+  })
+
+  useMemo(() => {
+    fetch(`https://cors-anywhere.herokuapp.com/${tracklist}/?limit=10` )
+    .then(response => response.json())
+    .then(response => {
+      setResult({ status: 'loaded', payload: response})
+    })
+    .catch(error => setResult({ status: 'error', error}))
+  }, [tracklist]) 
+  console.log(result)
+
+
   return (
       <>
       <Image src={picture_big} alt={title} onClick={() => setIsModalOpen(true)}/>
@@ -160,7 +207,18 @@ export const Playlists: React.FC<IPlaylist> = ({id, title, tracklist, user, pict
               <Line/>
               <Row>
                 <Column>
-                {tracklist}
+                 <ModalSubHeader>Track List</ModalSubHeader>
+                </Column>
+                <Column>
+                  {result.status === 'loaded' &&
+                    result.payload.data.map(idx => (
+                      <ModalTable  key={idx.id}>
+                        <ModalTableColumn>
+                          <td>{idx.title}</td>
+                        </ModalTableColumn>
+                      </ModalTable>
+                    ))
+                    }
                 </Column>
               </Row>
             </ModalContainer>

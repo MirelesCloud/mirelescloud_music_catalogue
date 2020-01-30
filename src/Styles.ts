@@ -179,12 +179,30 @@ export const Row = styled.div`
     display: table;
   }
 `
-export const ModalHeader = styled.h4``
+export const ModalHeader = styled.h5``
+export const ModalSubHeader = styled.h6``
 
 export const ModalText = styled.p`
   padding: 0px;
   margin: 3px;
 `
+
+export const ModalList = styled.ul`
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+`
+export const ModalTable = styled.table`
+  font-size: 14px;
+`
+
+export const ModalTableColumn = styled.tr`
+  &:nth-child(even) {
+    background-color: #dddddd;
+  }
+`
+
 export const Line = styled.hr`
   color: rgba(0, 0, 0, 0.7);
   
@@ -197,21 +215,10 @@ export const CloseX = styled.div`
   }
 `
 
-export const Select = styled.select`
-  font-size: 16px;
-  border: solid 1px #dbdbdb;
-  border-radius: 3px;
-  color: #262626;
-  padding: 7px 33px;
-  border-radius: 3px;
-  color: #999;
-  cursor: text;
-  font-size: 14px;
-  font-weight: 300;
-  text-align: center;
-  background: #fafafa;
+export const Select = styled.div`
+  position: relative;
+  background-color: #cccccc;
   margin-right: 10px;
-  width: 200px;
 
   &::after {
     position: absolute;

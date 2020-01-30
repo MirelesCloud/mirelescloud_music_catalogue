@@ -46,31 +46,44 @@ export interface IAlbum {
     }
   }
 
-  export interface IAlbumTracks {
-    id: number;
-    title: string;
+export interface IAlbumTracks {
+  id: number;
+  title: string;
   }
 
-  export interface ITrackList {
-    data: IAlbumTracks[];
+export interface ITrackList {
+  data: IAlbumTracks[];
   }
   
-  export interface IArtist {
-    id: number;
-    name: string;
-    position: number;
-    picture_big: string;
-    tracklist: string;
+export interface IArtist {
+  id: number;
+  name: string;
+  position: number;
+  picture_big: string;
+  tracklist: string;
+  }
+
+export interface IArtistTopTracks {
+  id: number;
+  title: string;
   }
   
-  export interface IPlaylist {
-    id: number;
-    title: string;
-    picture_big: string;
-    tracklist: string;
-    user: { name: string };
+export interface IPlaylist {
+  id: number;
+  title: string;
+  picture_big: string;
+  tracklist: string;
+  user: { name: string };
   }
-  
+
+export interface IPlaylistTracks {
+  id: number;
+  title: string;
+}
+
+export interface IPlayListData {
+  data: IPlaylistTracks[];
+}
 
 export interface IPodcast {
     id: number;
@@ -99,3 +112,7 @@ export interface IPodcast {
     data: IData[]
   }
 
+export interface ISelect {
+  artist?: string;
+  track? : string;
+}

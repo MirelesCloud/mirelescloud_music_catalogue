@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { Fragment } from 'react';
 import { useEffect, useState } from 'react';
-import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Service, IResults } from './Types'
+import { Service, IResults, ISelect } from './Types'
 import NavBar from './Header'
 import GetChart from './Api'
 import { Tracks, Albums, Artists, Playlists, Podcasts, Search } from './Charts'
@@ -13,20 +12,13 @@ import {
   MainContainer,
   ImagesWrapper,
   ImageContainer,
-  Image,
   InfoContainer,
-  InfoImage,
   InfoDetails,
   InfoDetailsLeft,
   InfoDetailsRight,
-  InfoHeader,
-  InfoText, 
   Input,
   CustomButton,
   Select }  from './Styles'
-
-
-const API_KEY = process.env.REACT_APP_DEEZER_API_KEY;
 
 const App: React.FC = () => {
   const [results, setResults] = useState<Service<IResults>>({
@@ -35,8 +27,13 @@ const App: React.FC = () => {
   let r = Math.random().toString(36).substr(2, 1);
   const [query, setQuery] = useState(r)
   const [search, setSearch] = useState(r)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [select, setSelect] = useState<ISelect>()
   const chart = GetChart()
+
+  function handleSubmit (e: any) {
+    e.preventDefault();
+    console.log(select);
+  }
 
   useEffect(() => {
     fetch(`https://cors-anywhere.herokuapp.com/http://api.deezer.com/search?q=${search}&limit=10`)
@@ -44,8 +41,6 @@ const App: React.FC = () => {
     .then(response => {
       setResults({ status: 'loaded', payload: response});
       setQuery("")
-      console.log(response)
-      
     })
     .catch(error => setResults({ status: 'error', error}))
   }, [search])
@@ -58,7 +53,6 @@ const App: React.FC = () => {
           <InfoContainer>
             <ModalProvider>
           <h3>Top Tracks</h3>
-          
           <ImagesWrapper>
               {chart.status === 'loaded' && 
                 chart.payload.tracks.data.map(idx => (
@@ -68,7 +62,6 @@ const App: React.FC = () => {
                 ))
               }
             </ImagesWrapper>
-         
             <hr/>
             <h3>Top Albums</h3>
             <ImagesWrapper>
@@ -117,13 +110,15 @@ const App: React.FC = () => {
             <h3>Discover...</h3>
             <InfoDetails>
               <InfoDetailsLeft>
-                <Select>
-                  
-                    <option>Search</option>
-                    <option>Artist</option>
-                    <option>Track</option>
-               
-                </Select>{" "}
+                <form onSubmit={handleSubmit}>
+                  <Select>
+                    <select>
+                      <option>Select</option>
+                      <option value="artist" >Artist</option>
+                      <option value="track">Track</option>
+                    </select>
+                  </Select>
+                </form>
                 <Input placeholder="search for..." type="text" name="search" value={query} onChange={e => setQuery(e.target.value)}/>
                 <CustomButton  onClick={() => setSearch(query)}>Search</CustomButton>
               </InfoDetailsLeft>
